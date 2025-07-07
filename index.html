@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone 15 Pro - Exploration 3D</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="apple-logo">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="white">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+            </div>
+            <div class="loading-text">Chargement de l'iPhone 15 Pro...</div>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+            <div class="loading-percentage" id="loading-percentage">0%</div>
+        </div>
+    </div>
+
+    <div id="app-container">
+        <canvas id="three-canvas"></canvas>
+        
+        <div id="ui-overlay">
+            <header class="app-header">
+                <div class="header-left">
+                    <h1>iPhone 15 Pro</h1>
+                    <p class="subtitle">Exploration 3D Interactive</p>
+                </div>
+                <div class="header-right">
+                    <button id="explode-btn" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14.5 2v6h6v1.5h-6v6h-1.5v-6h-6V8h6V2h1.5z"/>
+                        </svg>
+                        <span class="btn-text">Démonter</span>
+                    </button>
+                    <button id="reset-btn" class="btn btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        </svg>
+                        <span class="btn-text">Reset</span>
+                    </button>
+                    <button id="info-btn" class="btn btn-tertiary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                        <span class="btn-text">Infos</span>
+                    </button>
+                    <button id="capture-btn" class="btn btn-success">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 15.2l-3.14-3.14 1.41-1.41L12 12.38l1.73-1.73 1.41 1.41L12 15.2zM17 3H7v2H1v16h22V5h-6V3zm4 16H3V7h4V5h10v2h4v12z"/>
+                        </svg>
+                        <span class="btn-text">Capturer</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="side-panel" id="side-panel">
+                <div class="panel-header">
+                    <h3>Composants</h3>
+                    <div class="panel-stats">
+                        <span class="total-components">12 composants</span>
+                        <span class="total-price">~1200€</span>
+                    </div>
+                    <button id="close-panel" class="close-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="panel-content">
+                    <div class="component-list" id="component-list"></div>
+                </div>
+            </div>
+
+            <div class="bottom-controls">
+                <div class="view-controls">
+                    <button id="front-view" class="view-btn active" data-view="front">
+                        <span class="view-icon">📱</span>
+                        <span class="view-label">Face</span>
+                    </button>
+                    <button id="back-view" class="view-btn" data-view="back">
+                        <span class="view-icon">📷</span>
+                        <span class="view-label">Dos</span>
+                    </button>
+                    <button id="side-view" class="view-btn" data-view="side">
+                        <span class="view-icon">📐</span>
+                        <span class="view-label">Côté</span>
+                    </button>
+                    <button id="top-view" class="view-btn" data-view="top">
+                        <span class="view-icon">🔝</span>
+                        <span class="view-label">Dessus</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="interaction-hints">
+                <div class="hint">
+                    <span class="hint-icon">🖱️</span>
+                    <span class="hint-text">Cliquez pour sélectionner</span>
+                </div>
+                <div class="hint">
+                    <span class="hint-icon">🔄</span>
+                    <span class="hint-text">Glissez pour tourner</span>
+                </div>
+                <div class="hint">
+                    <span class="hint-icon">🔍</span>
+                    <span class="hint-text">Molette pour zoomer</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="component-modal" class="modal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-section">
+                        <div class="component-icon" id="modal-icon"></div>
+                        <h2 id="modal-title"></h2>
+                    </div>
+                    <button id="modal-close" class="close-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="component-visual">
+                        <div class="component-image" id="component-image"></div>
+                        <div class="component-price-tag" id="component-price-tag"></div>
+                    </div>
+                    <div class="component-details">
+                        <div class="detail-section">
+                            <h4>Description</h4>
+                            <p id="component-description"></p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Rôle dans l'iPhone</h4>
+                            <p id="component-importance"></p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Spécifications techniques</h4>
+                            <ul id="component-specs"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="capture-modal" class="modal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Capture 3D générée</h2>
+                    <button id="capture-modal-close" class="close-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="capture-content">
+                        <canvas id="capture-canvas"></canvas>
+                        <div class="capture-controls">
+                            <button id="download-btn" class="btn btn-primary">Télécharger l'image</button>
+                            <button id="share-btn" class="btn btn-secondary">Partager</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/OrbitControls.js"></script>
+    <script src="components-data.js"></script>
+    <script src="three-scene.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

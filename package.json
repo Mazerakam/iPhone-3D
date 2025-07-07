@@ -1,0 +1,17 @@
+{
+    "name": "iphone-15-pro-3d",
+    "version": "1.0.0",
+    "description": "Visualisation 3D interactive de l'iPhone 15 Pro",
+    "main": "index.html",
+    "scripts": {
+        "start": "python -m http.server 8000",
+        "build": "echo 'Build completed'",
+        "deploy": "echo 'Ready for deployment'"
+    },
+    "keywords": ["iphone", "3d", "three.js", "interactive"],
+    "author": "Votre nom",
+    "license": "MIT",
+    "dependencies": {
+        "three": "^0.128.0"
+    }
+}
